@@ -1,0 +1,35 @@
+<html>
+<body>
+<pre>
+    ${value1}
+    ${value2!!}   <!--如果不存在强制为空 -->
+    ${value2!}   <!--如果不存在强制为空 -->
+    ${value3}
+
+
+    <#list colors as color >
+    This is Color ${color_index}: ${color}
+    </#list>
+
+    <#--直接遍历map的第二种方式-->
+    <#list hashMap?keys as key>
+    key:${key}--value:${hashMap["${key}"]}
+    </#list>
+    </br>
+    <#--直接遍历map的values-->
+    <#list hashMap?values as value>
+    ${value}
+    </#list>
+
+
+    User: ${user.name}
+
+    <#-- 定义一个变量 -->
+    <#assign title = "nowcoder">
+    ${title}
+
+    <#include "/header.html">
+
+</pre>
+</body>
+</html>
