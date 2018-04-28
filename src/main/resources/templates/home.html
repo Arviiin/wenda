@@ -1,34 +1,56 @@
 <html>
 <body>
 <pre>
-    ${value1}
-    ${value2!!}   <!--如果不存在强制为空 -->
-    ${value2!}   <!--如果不存在强制为空 -->
+    #*
+    你看不到我~~~~
+    *#
+    $!{value1}
+    $!{value2} ## 如果不存在，强制为空
     ${value3}
 
+    colors: $!{colors}
 
-    <#list colors as color >
-    This is Color ${color_index}: ${color}
-    </#list>
+    #foreach($color in $colors)
+        This is Color $!{foreach.index}: $color, $!{foreach.count}
+    #end
 
-    <#--直接遍历map的第二种方式-->
-    <#list hashMap?keys as key>
-    key:${key}--value:${hashMap["${key}"]}
-    </#list>
-    </br>
-    <#--直接遍历map的values-->
-    <#list hashMap?values as value>
-    ${value}
-    </#list>
+    #foreach($key in $map.keySet())
+        Number: $key, Value: $map.get($key)
+    #end
+
+    #foreach($kv in $map.entrySet())
+        Number: $kv.key, Value: $kv.value
+    #end
+
+    User:  $!{user.name}
+    $!{user.description}
+    $!{user.getDescription()}
+
+    #set($title = "nowcoder_title")
+    Title: $!{title}
 
 
-    User: ${user.name}
+    Parse: #parse("header.html")
+    Include: #include("header.html")
 
-    <#-- 定义一个变量 -->
-    <#assign title = "nowcoder">
-    ${title}
+    #macro (render_color, $index, $color)
+        Color Render Macro $index, $color
+    #end
 
-    <#include "/header.html">
+    #foreach($color in $colors)
+        #render_color($foreach.index, $color)
+    #end
+
+    #set($hello = "hello")
+    #set($helloworld1 = "$!{hello} world")
+    $!hello
+    $helloworld1
+    #set($helloworld2 = '$!{hello} world')
+    $helloworld2
+
+
+
+
 
 </pre>
 </body>

@@ -1,6 +1,11 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.aspect.LogAspect;
 import com.nowcoder.model.User;
+import com.nowcoder.service.WendaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +18,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-@Controller
+//把之前学习知识点的首页注释掉
+//@Controller
 public class IndexController {
+
+    private static final Logger logger= LoggerFactory.getLogger(LogAspect.class);
+
+    @Autowired
+    WendaService wendaService;
 
     @RequestMapping(path = {"/","/index"})
     @ResponseBody//直接返回字符串
     public String index(HttpSession httpSession) {
-        return "Hello NowCoder" + httpSession.getAttribute("msg") ;
+
+        logger.info("VISIT HOME");
+        return wendaService.getMessage(2) + "Hello NowCoder" + httpSession.getAttribute("msg") ;
     }
 
     @RequestMapping(path = {"/profile/{groupId}/{userId}"})
@@ -100,7 +113,20 @@ public class IndexController {
         return red;
     }
 
+    @RequestMapping(path = {"/admin"}, method = {RequestMethod.GET})
+    @ResponseBody
+    public String admin(@RequestParam("key") String key){
+        if("admin".equals(key)){
+            return "hello admin";
+        }
 
-    //1.29
+        throw new IllegalArgumentException("参数不对啊");
+    }
+
+    @ExceptionHandler()
+    @ResponseBody
+    public String error(Exception e){
+        return "Aerror:" + e.getMessage();
+    }
 
 }
