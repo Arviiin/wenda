@@ -15,7 +15,16 @@ public interface UserDAO {
     int addUser(User user);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
+    @Results({
+            @Result(property = "id" ,column ="id"),
+            @Result(property = "name" , column = "name"),
+            @Result(property= "password",column ="password"),
+            @Result(property= "salt",column="salt"),
+            @Result(property="headUrl",column="head_url")
+    })
     User selectById(int id);
+
+
 
     @Update({"update ", TABLE_NAME, " set password=#{password} where id=#{id}"})
     void updatePassword(User user);
