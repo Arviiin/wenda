@@ -2,14 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.nowcoder.dao.QuestionDAO">
+
+
+    <!-- 定义resultType
+    将select id id_,username _username from user和User类中的属性做一个映射关系
+
+    type:resultMap最终所映射的Java对象类型，可以使用别名
+    id:对resultMap的唯一标识
+    -->
+    <resultMap type="question" id="questionResultMap">
+        <!-- id表示查询结果集中唯一标识
+        column:查询出的列名
+        property:type所指定的POJO中的属性名
+        最终reslutMap对column和property做一个映射关系(对应关系)
+        -->
+        <id column="id" property="id"/>
+        <!-- 对普通列的映射定义 -->
+        <result  column="title" property="title"/>
+        <result  column="content" property="content"/>
+        <result  column="user_id" property="userId"/>
+        <result  column="created_date" property="createdDate"/>
+        <result  column="comment_count" property="commentCount"/>
+    </resultMap>
+
     <sql id="table">question</sql>
     <sql id="selectFields">id, title, content, comment_count,created_date,user_id</sql>
-    <select id="selectLatestQuestions" resultType="com.nowcoder.model.Question">
+    <!--如果查询出来的列名和pojo的属性名不一致，通过定义一个resultMap对列名和pojo属性名之间作一个映射关系。
+        resultType和resultMap只能有一个成立，resultType是直接表示返回类型的，使用resultType进行输出映射，只有查询出来的列名和pojo中的属性名一致，该列才可以映射成功-->
+    <select id="selectLatestQuestions" parameterType="java.lang.Integer" resultMap="questionResultMap">
         SELECT
         <include refid="selectFields"/>
         FROM
         <include refid="table"/>
-
         <if test="userId != 0">
             WHERE user_id = #{userId}
         </if>
