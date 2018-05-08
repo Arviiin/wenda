@@ -1,6 +1,5 @@
 package com.nowcoder.interceptor;
 
-import com.nowcoder.controller.HomeController;
 import com.nowcoder.dao.LoginTicketDAO;
 import com.nowcoder.dao.UserDAO;
 import com.nowcoder.model.HostHolder;
@@ -22,50 +21,26 @@ import java.util.Date;
  * 写拦截器
  */
 @Component
-public class PassportInterceptor implements HandlerInterceptor {
+public class LoginRequredInterceptor implements HandlerInterceptor {
 
-    private static final Logger logger= LoggerFactory.getLogger(PassportInterceptor.class);
-
-    @Autowired
-    LoginTicketDAO loginTicketDAO;
-
-    @Autowired
-    UserDAO userDAO;
+    private static final Logger logger= LoggerFactory.getLogger(LoginRequredInterceptor.class);
 
     @Autowired
     HostHolder hostHolder;//这样user就可以在不同线程里都有想应的变量
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String ticket = null;
-        if(request.getCookies() != null){
-            for (Cookie cookie : request.getCookies()){
-                if (cookie.getName().equals("ticket")){
-                    ticket = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        if (ticket != null){
-            LoginTicket loginTicket = loginTicketDAO.selectByTicket(ticket);
-            if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() !=0){
-                return true;
-            }
-            User user = userDAO.selectById(loginTicket.getUserId());
-            hostHolder.setUser(user);
+        if (hostHolder.getUser() == null){
+            response.sendRedirect("/reglogin?next="+request.getRequestURI());
         }
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (modelAndView != null){
-            modelAndView.addObject("user", hostHolder.getUser());
-        }
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        hostHolder.clear();
     }
 }

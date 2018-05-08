@@ -23,7 +23,9 @@
         </div>
         <div class="desk-front sign-flow clearfix sign-flow-simple">
             <div class="view view-signin" data-za-module="SignInForm" style="display: block;">
-                <form action="/reg/" id="regloginform" method="post">
+                <!--这里的action，就相当于超链接中的href表示要链接的地址一样，action属性规定了提交表单信息时，向何处发送表单数据，
+                即是处理表单数据的目标地址。如果什么都不写的话，就表示默认为当前页，这里就算写了也会被button里的action架空失效-->
+                <form action="" id="regloginform" method="post">
                     <input type="hidden" name="_xsrf" value="21aa1c8d254df2899b23ab9afbd62a53">
                     <div class="group-inputs">
                         <div class="email input-wrapper">
@@ -33,14 +35,17 @@
                             <input type="password" name="password" aria-label="密码" placeholder="密码" required="">
                         </div>
                     </div>
-                    <input type="hidden" name="next" value="$!{next}"/>
+                    <#if next??>
+                    <input type="hidden" name="next" value="${next}"/>
+                    </#if>
                     <div class="button-wrapper command clearfix">
                         <button class="sign-button submit" type="submit" onclick="form=document.getElementById('regloginform');form.action='/login/'">登录</button>
                         <button class="sign-button submit" type="submit" onclick="form=document.getElementById('regloginform');form.action='/reg/'">注册</button>
                     </div>
                     <div class="signin-misc-wrapper clearfix">
                         <label class="remember-me">
-                            <input type="checkbox" name="rememberme" checked="" value="true"> 记住我
+                            <!--<input type="checkbox" name="rememberme" checked="" 只要有checked这个属性就是选中状态 value="true"> 记住我-->
+                            <input type="checkbox" name="rememberme"  value="false"> 记住我
                         </label>
                         <a class="unable-login" href="#">无法登录?</a>
                     </div>
