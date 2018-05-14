@@ -17,6 +17,10 @@ public class QuestionService {
     @Autowired
     SensitiveService sensitiveService;
 
+    public Question selectById(int id){
+        return questionDAO.selectById(id);
+    }
+
     public int addQuestion(Question question){
         question.setContent(HtmlUtils.htmlEscape(question.getContent()));//将<script>alter("hi");</script>进行转义
         question.setTitle(HtmlUtils.htmlEscape(question.getTitle()));

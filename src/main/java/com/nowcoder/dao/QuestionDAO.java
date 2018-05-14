@@ -4,6 +4,7 @@ import com.nowcoder.model.Question;
 import com.nowcoder.model.User;
 import org.apache.ibatis.annotations.*;
 
+import javax.swing.text.TabableView;
 import java.util.List;
 
 @Mapper
@@ -16,11 +17,19 @@ public interface QuestionDAO {
             ") values (#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
     int addQuestion(Question question);
 
+    @Select({"select ", SELECT_FIELDS, "from", TABLE_NAME, " where id=#{id}"})
+    @Results({//当表名和bean中的字段名不一致的时候需要。此处一样的地方可以不写 //注意上面\"是转意字符"
+            @Result(property = "id" ,column="id"),//前面是bean中的属性，后面是数据库的列
+            @Result(property = "title" ,column="title"),
+            @Result(property = "content" ,column="content"),
+            @Result(property = "userId" ,column="user_id"),
+            @Result(property = "createdDate" ,column="created_date"),
+            @Result(property = "commentCount" ,column="comment_count")})
+    Question selectById(int id);
+
     //xml版本的写法
     /*List<Question> selectLatestQuestions(@Param("userId") int userId, @Param("offset") int offset,
                                          @Param("limit") int limit);*/
-
-
     @Select({"<script>select  *  from ", TABLE_NAME ," <if test=\" userId != 0 \"> where user_id = #{userId}</if> ORDER BY id DESC  LIMIT #{offset},#{limit} </script>"})
     @Results({//当表名和bean中的字段名不一致的时候需要。此处一样的地方可以不写 //注意上面\"是转意字符"
             @Result(property = "id" ,column="id"),//前面是bean中的属性，后面是数据库的列
@@ -30,5 +39,8 @@ public interface QuestionDAO {
             @Result(property = "createdDate" ,column="created_date"),
             @Result(property = "commentCount" ,column="comment_count")})
     List<Question> selectLatestQuestions(@Param("userId") int userId,@Param("offset") int offset,@Param("limit") int limit);
+
+    @Update({"update ", TABLE_NAME, " set comment_count = #{commentCount} where id=#{id}"})
+    int updateCommentCount(@Param("id") int id, @Param("commentCount") int commentCount);
 
 }
