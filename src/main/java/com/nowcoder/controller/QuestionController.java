@@ -1,7 +1,7 @@
 package com.nowcoder.controller;
 
-import com.nowcoder.model.HostHolder;
-import com.nowcoder.model.Question;
+import com.nowcoder.model.*;
+import com.nowcoder.service.CommentService;
 import com.nowcoder.service.QuestionService;
 import com.nowcoder.service.UserService;
 import com.nowcoder.util.WendaUtil;
@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 //发布问题是一个post的ajax（异步的js请求）请求，即：不是提交到一个页面，而是提交到后台，后台会返回一个json串，然后json串自己做一些动态的页面刷新或者说做一些动态的处理
@@ -27,6 +29,9 @@ public class QuestionController {
 
     @Autowired
     HostHolder hostHolder;
+
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping(value = "/question/add",method = {RequestMethod.POST})
     @ResponseBody//限定返回json必须带code:0代表正确返回
@@ -56,8 +61,8 @@ public class QuestionController {
     public String questionDetail(Map model, @PathVariable("qid") int qid) {
         Question question = questionService.selectById(qid);
         model.put("question", question);
-        model.put("user", userService.getUser(question.getUserId()));
-        /*List<Comment> commentList = commentService.getCommentsByEntity(qid, EntityType.ENTITY_QUESTION);
+
+        List<Comment> commentList = commentService.getCommentsByEntity(qid, EntityType.ENTITY_QUESTION);
         List<ViewObject> vos = new ArrayList<>();
         for (Comment comment : commentList) {
             ViewObject vo = new ViewObject();
@@ -65,7 +70,7 @@ public class QuestionController {
             vo.set("user", userService.getUser(comment.getUserId()));
             vos.add(vo);
         }
-        model.addAttribute("comments", vos);*/
+        model.put("comments", vos);
 
         return "detail";
     }

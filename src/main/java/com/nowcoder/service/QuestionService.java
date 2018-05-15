@@ -17,6 +17,9 @@ public class QuestionService {
     @Autowired
     SensitiveService sensitiveService;
 
+    @Autowired
+    UserService userService;
+
     public Question selectById(int id){
         return questionDAO.selectById(id);
     }
@@ -33,5 +36,9 @@ public class QuestionService {
 
     public List<Question> getLatestQuestion(int userId,int offset, int limit){
         return questionDAO.selectLatestQuestions(userId,offset,limit);
+    }
+
+    public int updateCommentCount(int id, int count) {
+        return questionDAO.updateCommentCount(id, count);
     }
 }

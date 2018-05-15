@@ -20,6 +20,10 @@ public class UserService {
     @Autowired
     private LoginTicketDAO loginTicketDAO;
 
+    public User selectByName(String name) {
+        return userDAO.selectByName(name);
+    }
+
     //注册
     public Map<String, String>  register(String username, String password){
         Map<String, String> map = new HashMap<String, String>();
@@ -50,6 +54,7 @@ public class UserService {
         map.put("ticket",ticket);
         return map;
     }
+
     //登陆
     public Map<String, String>  login(String username, String password){
         Map<String, String> map = new HashMap<String, String>();

@@ -33,8 +33,8 @@ public interface QuestionDAO {
     @Select({"<script>select  *  from ", TABLE_NAME ," <if test=\" userId != 0 \"> where user_id = #{userId}</if> ORDER BY id DESC  LIMIT #{offset},#{limit} </script>"})
     @Results({//当表名和bean中的字段名不一致的时候需要。此处一样的地方可以不写 //注意上面\"是转意字符"
             @Result(property = "id" ,column="id"),//前面是bean中的属性，后面是数据库的列
-//            @Result(property = "title" ,column="title"),
-//            @Result(property = "content" ,column="content"),
+            @Result(property = "title" ,column="title"),
+            @Result(property = "content" ,column="content"),
             @Result(property = "userId" ,column="user_id"),
             @Result(property = "createdDate" ,column="created_date"),
             @Result(property = "commentCount" ,column="comment_count")})
